@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>平台基本信息</title>
+    <link rel="stylesheet" href="__ADMIN__/plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="__ADMIN__/css/global.css" media="all">
+    <link rel="stylesheet" href="__ADMIN__/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__ADMIN__/css/style.css" />
+</head>
+
+<body>
+<div class="admin-main">
+    <fieldset class="layui-elem-field ">
+        <legend>平台信息</legend>
+        <div class="layui-field-box table-responsive">
+            <table class=" layui-table table-hover">
+                <thead>
+                <tr>
+                    <th>公司名称</th>
+                    <th>公司网址</th>
+                    <th>负责人email</th>
+                    <th>负责人手机号</th>
+                    <th>公司电话</th>
+                    <th>备案号</th>
+                    <th>copyright</th>
+                    <th>公司地址</th>
+                    <th>公司简介</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="v"}
+                <tr>
+                    <td>{$v.sys_name}</td>
+                    <td>{$v.sys_url}</td>
+                    <td>{$v.sys_email}</td>
+                    <td>{$v.sys_phone}</td>
+                    <td>{$v.sys_tel}</td>
+                    <td>{$v.sys_beh}</td>
+                    <td>{$v.sys_copyright}</td>
+                    <td>{$v.sys_adr}</td>
+                    <td>{$v.sys_summary}</td>
+                    <td>
+                        <a href="{:url('basicEdit',['sys_id'=>$v['sys_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+
+        </div>
+    </fieldset>
+    <div class="admin-table-page">
+        <div id="page" class="page">
+            {$page}
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="__ADMIN__/plugins/layui/layui.js"></script>
+<script src="__STATIC__/js/jquery.2.1.1.min.js"></script>
+<script>
+    layui.use(['form', 'layer'], function() {
+        var form = layui.form(), layer = layui.layer;
+    });
+
+</script>
+</body>
+
+</html>

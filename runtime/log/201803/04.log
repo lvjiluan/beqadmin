@@ -1,0 +1,133 @@
+---------------------------------------------------------------
+[ 2018-03-04T13:08:22+08:00 ] 127.0.0.1 127.0.0.1 GET /
+[ info ] localhost:1000/ [运行时间：0.045116s][吞吐率：22.17req/s] [内存消耗：1,151.27kb] [文件加载：36]
+[ info ] [ LANG ] D:\www\admin\think\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => '',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_b560076a39d2d5b09c3bf2dbb5bce455=1512304207',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'keep-alive',
+  'host' => 'localhost:1000',
+  'content-length' => '',
+  'content-type' => '',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\www\admin/app/admin\lang\zh-cn.php
+[ info ] [ SESSION ] INIT array (
+  'id' => '',
+  'var_session_id' => '',
+  'prefix' => 'think',
+  'type' => '',
+  'auto_start' => true,
+)
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-03-04T13:08:22+08:00 ] 127.0.0.1 127.0.0.1 GET /admin/login/index.html
+[ info ] localhost:1000/admin/login/index.html [运行时间：0.168246s][吞吐率：5.94req/s] [内存消耗：1,822.61kb] [文件加载：43]
+[ info ] [ LANG ] D:\www\admin\think\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'admin',
+    1 => 'login',
+    2 => 'index',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_b560076a39d2d5b09c3bf2dbb5bce455=1512304207; PHPSESSID=4hhtvtv8afm1125ej01oh1kr90',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+  'upgrade-insecure-requests' => '1',
+  'cache-control' => 'max-age=0',
+  'connection' => 'keep-alive',
+  'host' => 'localhost:1000',
+  'content-length' => '',
+  'content-type' => '',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LANG ] D:\www\admin/app/admin\lang\zh-cn.php
+[ info ] [ RUN ] app\admin\controller\Login->index[ D:\www\admin\app\admin\controller\Login.php ]
+[ info ] [ DB ] INIT mysql
+[ info ] [ VIEW ] D:\www\admin/app/admin\view\login\login.html [ array (
+) ]
+[ info ] [ LOG ] INIT File
+[ sql ] [ DB ] CONNECT:[ UseTime:0.033305s ] mysql:dbname=wawabang_test;host=106.14.113.124;port=3306;charset=utf8
+[ sql ] [ SQL ] SHOW COLUMNS FROM `tes_auth_rule` [ RunTime:0.024618s ]
+[ sql ] [ SQL ] SELECT * FROM `tes_auth_rule` [ RunTime:0.020199s ]
+[ sql ] [ SQL ] SHOW COLUMNS FROM `tes_system_basic` [ RunTime:0.018517s ]
+[ sql ] [ SQL ] SELECT * FROM `tes_system_basic` WHERE  `sys_id` = 1 LIMIT 1 [ RunTime:0.022708s ]
+---------------------------------------------------------------
+[ 2018-03-04T13:08:22+08:00 ] 127.0.0.1 127.0.0.1 GET /public/static/admin/Images/login-bg-1.jpg
+[ info ] localhost:1000/public/static/admin/Images/login-bg-1.jpg [运行时间：0.022981s][吞吐率：43.51req/s] [内存消耗：847.89kb] [文件加载：27]
+[ info ] [ LANG ] D:\www\admin\think\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'public',
+    1 => 'static',
+    2 => 'admin',
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_b560076a39d2d5b09c3bf2dbb5bce455=1512304207; PHPSESSID=4hhtvtv8afm1125ej01oh1kr90',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'referer' => 'http://localhost:1000/public/static/admin/css/login.css',
+  'accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+  'connection' => 'keep-alive',
+  'host' => 'localhost:1000',
+  'content-length' => '',
+  'content-type' => '',
+)
+[ info ] [ PARAM ] array (
+  'Images' => 'login-bg-1.jpg',
+)
+[ info ] [ LOG ] INIT File
+---------------------------------------------------------------
+[ 2018-03-04T13:08:22+08:00 ] 127.0.0.1 127.0.0.1 GET /favicon.ico
+[ info ] localhost:1000/favicon.ico [运行时间：0.021457s][吞吐率：46.60req/s] [内存消耗：847.33kb] [文件加载：27]
+[ info ] [ LANG ] D:\www\admin\think\lang\zh-cn.php
+[ info ] [ ROUTE ] array (
+  'type' => 'module',
+  'module' => 
+  array (
+    0 => 'favicon.ico',
+    1 => NULL,
+    2 => NULL,
+  ),
+)
+[ info ] [ HEADER ] array (
+  'cookie' => 'Hm_lvt_b560076a39d2d5b09c3bf2dbb5bce455=1512304207; PHPSESSID=4hhtvtv8afm1125ej01oh1kr90',
+  'accept-language' => 'zh-CN,zh;q=0.9',
+  'accept-encoding' => 'gzip, deflate, br',
+  'referer' => 'http://localhost:1000/admin/login/index.html',
+  'accept' => 'image/webp,image/apng,image/*,*/*;q=0.8',
+  'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
+  'connection' => 'keep-alive',
+  'host' => 'localhost:1000',
+  'content-length' => '',
+  'content-type' => '',
+)
+[ info ] [ PARAM ] array (
+)
+[ info ] [ LOG ] INIT File

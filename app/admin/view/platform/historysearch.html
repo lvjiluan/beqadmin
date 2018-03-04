@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>历史搜索</title>
+    <link rel="stylesheet" href="__ADMIN__/plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="__ADMIN__/css/global.css" media="all">
+    <link rel="stylesheet" href="__ADMIN__/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__ADMIN__/css/style.css" />
+</head>
+
+<body>
+<div class="admin-main">
+    <div style="height:50px;">
+        <form method="post" action="{:url('historysearch')}" >
+            <input style="width:300px;float:left;" value="{$content}" placeholder="输入反馈用户搜索" class="layui-input" type="text" name="content" class="content" />
+            <button style="float:left;margin-left:10px;" type="submit" class="layui-btn" lay-submit="" lay-filter="auth">搜索</button>
+        </form>
+    </div>
+    <div style="clear:both"></div>
+    <fieldset class="layui-elem-field ">
+        <legend>历史搜索{:lang('list')}</legend>
+        <div class="layui-field-box table-responsive">
+            <table class=" layui-table table-hover">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>搜索用户</th>
+                    <th>搜索内容</th>
+                    <th>搜索时间</th>
+                    <th>{:lang('action')}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="list" id="v"}
+                <tr>
+                    <td>{$v.slo_id}</td>
+                    <td>{$v.use_nickname}</td>
+                    <td><div style="width:600px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">{$v.slo_content}</div></td>
+                    <td>{$v.slo_time}</td>
+                    <td>
+                        <a href="javascript:;" onclick="return del('{$v.slo_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+
+        </div>
+    </fieldset>
+    <div class="admin-table-page">
+        <div id="page" class="page">
+            {$page}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="__ADMIN__/plugins/layui/layui.js"></script>
+<script src="__STATIC__/js/jquery.2.1.1.min.js"></script>
+<script>
+    layui.use(['form', 'layer'], function() {
+        var form = layui.form(), layer = layui.layer;
+    });
+    function del(id) {
+        layer.confirm('{:lang("Are you sure you want to delete it")}', {icon: 3}, function (index) {
+            window.location.href = "{:url('historysearchDel')}?slo_id="+id;
+        });
+    }
+
+
+</script>
+</body>
+
+</html>
