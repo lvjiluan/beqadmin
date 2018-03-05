@@ -158,6 +158,10 @@ class Platform extends Common{
             ->join('tes_org_info','org_id = cor_orgid','left')
             ->order("cor_addtime desc")
             ->select();
+        $sex = array("女","男");
+        foreach($list as $k => $v) {
+            $list[$k]["cor_sex"] = $sex[$v["cor_sex"]];
+        }
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -367,14 +371,14 @@ class Platform extends Common{
         if(request()->isPost()){
             $data=input('post.');
             foreach($data['sho_content'] as $k => $v) {
-                if($v) {
+//                if($v) {
                     $res = $search_hot->where(["sho_id"=>$k])->find();
                     if($res) {
                         $search_hot->where(["sho_id"=>$k])->update(["sho_content"=>$v]);
                     } else {
                         $search_hot->insert(["sho_id"=>$k,"sho_content"=>$v,"sho_time"=>date("Y-m-d H:i:s",time())]);
                     }
-                }
+//                }
             }
             $result['code'] = 1;
             $result['msg'] = '修改成功!';

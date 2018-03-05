@@ -28,6 +28,7 @@
                 <tr>
                     <th>序号</th>
                     <th>投诉人</th>
+                    <th>性别</th>
                     <th>投诉机构</th>
                     <th>手机号</th>
                     <th>投诉内容</th>
@@ -39,7 +40,8 @@
                 {volist name="list" id="v"}
                 <tr>
                     <td>{$v.cor_id}</td>
-                    <td>{$v.cor_firstname}{$v.cor_sex}</td>
+                    <td>{$v.cor_firstname}</td>
+                    <td>{$v.cor_sex}</td>
                     <td>{$v.org_name}</td>
                     <td>{$v.cor_mobile}</td>
                     <td><div style="width:600px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">{$v.cor_content}</div></td>

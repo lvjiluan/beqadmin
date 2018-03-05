@@ -34,6 +34,14 @@
         </div>
 
         <div class="layui-form-item">
+            <label class="layui-form-label">机构</label>
+            <div class="layui-input-4">
+                <select name="pco_orgid" lay-verify="required" ng-model="field.pco_orgid" ng-options="v.org_id as v.org_name for v in orginfo" >
+                    <option value="">请选择推送机构</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">图片名称</label>
             <div class="layui-input-6">
                 <input type="text" name="top_title" ng-model="field.top_title" lay-verify="required" placeholder="{:lang('pleaseEnter')}图片名称" class="layui-input">

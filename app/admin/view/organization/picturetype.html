@@ -12,11 +12,13 @@
 
 <body>
 <div class="admin-main">
+    {if condition="$Think.const.ORG_ID eq 0"}
     <blockquote class="layui-elem-quote">
         <a href="{:url('picturetypeAdd')}" class="layui-btn layui-btn-small">
             <i class="fa fa-plus"></i> {:lang('add')}图册
         </a>
     </blockquote>
+    {/if}
     <fieldset class="layui-elem-field ">
         <legend>图册{:lang('list')}</legend>
         <div class="layui-field-box table-responsive">
@@ -27,7 +29,9 @@
                     <th>所属机构</th>
                     <th>图册名称</th>
                     <th>创建时间</th>
+                    {if condition="$Think.const.ORG_ID eq 0"}
                     <th>{:lang('action')}</th>
+                    {/if}
                 </tr>
                 </thead>
                 <tbody>
@@ -37,10 +41,12 @@
                     <td>{$v.org_name}</td>
                     <td>{$v.opi_title}</td>
                     <td>{$v.opi_time}</td>
+                    {if condition="$Think.const.ORG_ID eq 0"}
                     <td>
                         <a href="{:url('picturetypeEdit',['opi_id'=>$v['opi_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
                         <a href="javascript:;" onclick="return del('{$v.opi_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
                     </td>
+                    {/if}
                 </tr>
                 {/volist}
                 </tbody>

@@ -32,6 +32,15 @@
         </div>
 
         <div class="layui-form-item">
+            <label class="layui-form-label">所属机构</label>
+            <div class="layui-input-4">
+                <select name="opi_orgid" lay-verify="required" ng-model="field.opi_orgid" ng-options="v.org_id as v.org_name for v in orginfo" >
+                    <option value="">请选择推送机构</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" lay-submit="" lay-filter="auth">立即提交</button>
                 <a href="{:url('picturetype')}" class="layui-btn layui-btn-primary">返回</a>
@@ -46,6 +55,7 @@
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope){
         $scope.field = '{$picinfo}'!='null'?{$picinfo}:{opi_id:'',opi_title:''};
+        $scope.orginfo = {$orginfo};
         layui.use(['form', 'layer'], function () {
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {

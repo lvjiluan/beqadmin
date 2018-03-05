@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:44:"D:\www\admin/app/admin\view\login\login.html";i:1520139976;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:64:"/Users/lvjiluan/project/beqadmin/app/admin/view/login/login.html";i:1520141959;}*/ ?>
 <!DOCTYPE html>
 <html lang="zh_cn">
 <head>

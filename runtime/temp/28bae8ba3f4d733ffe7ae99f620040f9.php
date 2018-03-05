@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:48:"F:\study\ch_admin/app/admin\view\index\main.html";i:1504260618;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:63:"/Users/lvjiluan/project/beqadmin/app/admin/view/index/main.html";i:1520141959;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>

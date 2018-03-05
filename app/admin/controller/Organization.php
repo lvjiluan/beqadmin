@@ -244,8 +244,11 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function picturetype() {
+        $where["org_status"] = 1;
+        $this->orgid > 0 && $where["org_id"] = $this->orgid;
         $list=db('org_gallery')
             ->join('tes_org_info','org_id = opi_orgid','left')
+            ->where($where)
             ->select();
         $this->assign('list',$list);
         return $this->fetch();
@@ -260,7 +263,8 @@ class Organization extends Common{
     public function picturetypeAdd(){
         if(request()->isPost()) {
             $data=input('post.');
-            $data['opi_orgid'] = $this->orgid;
+            $orgId = explode(':',$data['opi_orgid']);
+            $data['opi_orgid'] =$orgId[1];
             $data['opi_time'] = date("Y-m-d H:i:s",time());
             db('org_gallery')->insert($data);
             $result['msg'] = '添加成功!';
@@ -268,6 +272,10 @@ class Organization extends Common{
             $result['code'] = 1;
             return $result;
         }else{
+            $where["org_status"] = 1;
+            $this->orgid > 0 && $where["org_id"] = $this->orgid;
+            $orginfo = db('org_info')->where($where)->select();
+            $this->assign('orginfo', json_encode($orginfo,true));
             return $this->fetch();
         }
     }
@@ -281,7 +289,8 @@ class Organization extends Common{
         $picmod=db('org_gallery');
         if(request()->isPost()){
             $data=input('post.');
-            $data['opi_orgid'] = $this->orgid;
+            $orgId = explode(':',$data['opi_orgid']);
+            $data['opi_orgid'] =$orgId[1];
             $where['opi_id'] = input('post.opi_id');
             $picmod->where($where)->update($data);
             $result['code'] = 1;
@@ -291,6 +300,10 @@ class Organization extends Common{
         }else{
             $opi_id = input('opi_id');
             $picinfo = $picmod->where(array("opi_id"=>$opi_id))->find();
+            $where["org_status"] = 1;
+            $this->orgid > 0 && $where["org_id"] = $this->orgid;
+            $orginfo = db('org_info')->where($where)->select();
+            $this->assign('orginfo', json_encode($orginfo,true));
             $this->assign('picinfo', json_encode($picinfo,true));
             return $this->fetch();
         }
@@ -331,6 +344,7 @@ class Organization extends Common{
     public function picture() {
         $list=db('org_photoes')
             ->join('tes_org_gallery','opi_id = top_opiid','left')
+            ->join('tes_org_info','opi_orgid = org_id','left')
             ->select();
         $this->assign('list',$list);
         return $this->fetch();
@@ -366,7 +380,15 @@ class Organization extends Common{
             $result['code'] = 1;
             return $result;
         }else{
-            $ginfo = db('org_gallery')->select();
+            $this->orgid > 0 && $where["org_id"] = $this->orgid;
+            $where["org_status"] = 1;
+            $ginfo = db('org_gallery')
+                ->join("tes_org_info",'opi_orgid = org_id','left')
+                ->where($where)
+                ->select();
+            foreach($ginfo as $k => $v) {
+                $ginfo[$k]["opi_title"] = $v["opi_title"]."-".$v["org_name"];
+            }
             $this->assign('ginfo', json_encode($ginfo,true));
             return $this->fetch();
         }
@@ -405,7 +427,12 @@ class Organization extends Common{
             $top_id = input('top_id');
             $picinfo = db('org_photoes')->where(array("top_id"=>$top_id))->find();
             $this->assign('picinfo', json_encode($picinfo,true));
-            $ginfo = db('org_gallery')->select();
+            $this->orgid > 0 && $where["org_id"] = $this->orgid;
+            $where["org_status"] = 1;
+            $ginfo = db('org_gallery')
+                ->join("tes_org_info",'opi_orgid = org_id','left')
+                ->where($where)
+                ->select();
             $this->assign('ginfo', json_encode($ginfo,true));
             return $this->fetch();
         }
@@ -439,6 +466,7 @@ class Organization extends Common{
         $list=db('org_comment')
             ->join('tes_org_info','org_id = oco_orgid','left')
             ->join('tes_user_info','use_id = oco_userid','left')
+            ->order("oco_time desc")
             ->select();
         $this->assign('list',$list);
         return $this->fetch();
@@ -1246,5 +1274,41 @@ class Organization extends Common{
 
     }
 
+    /**
+     * 课程预约管理
+     * @date 2018-03-05
+     * @author harry.lv
+     */
+    public function lessonOrder() {
+        $data=input('get.');
+        $keyword = $data["keyword"];
+        $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
+        $pageSize =5;
+        $page = $pageIndex*$pageSize;
+        $tol_id = input('tol_id');
+        $where["tol_id"] = $tol_id ? $tol_id : 0;
+        if($keyword) {
+            $where["tol_lesson_name"] = array("like","%".$keyword."%");
+        }
+        $list=db('lesson_order')
+            ->field("use_nickname,tol_lesson_name,tlo_status,tlo_create_time")
+            ->join("tes_org_lesson","tlo_lesson_id = tol_id","left")
+            ->join("tes_user_info","tlo_uid = use_id","left")
+            ->order("tlo_create_time desc")
+            ->limit($page,$pageSize)->where($where)->select();
+        $status = array("预约已取消","预约成功");
+        foreach($list as $k => $v) {
+            $list[$k]["tlo_status"] = $status[$v["tlo_status"]];
+        }
+        $count=db('lesson_order')
+            ->join("tes_org_lesson","tlo_lesson_id = tol_id")
+            ->join("tes_user_info","tlo_uid = use_id")->where($where)->count();
+        $pagecount = ceil($count/$pageSize);
+        $this->assign('keyword',$keyword);
+        $this->assign('pageIndex',$pageIndex+1);
+        $this->assign('count',$pagecount);
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
 
 }

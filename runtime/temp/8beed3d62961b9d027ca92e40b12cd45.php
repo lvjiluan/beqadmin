@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:72:"/Users/lvjiluan/project/beqadmin/app/admin/view/organization/lesson.html";i:1520259007;}*/ ?>
 <!DOCTYPE html>
 <html>
 
@@ -13,19 +14,19 @@
 <body>
 <div class="admin-main">
     <blockquote class="layui-elem-quote">
-        <a href="{:url('lessonAdd')}" class="layui-btn layui-btn-small">
-            <i class="fa fa-plus"></i> {:lang('add')}课程服务
+        <a href="<?php echo url('lessonAdd'); ?>" class="layui-btn layui-btn-small">
+            <i class="fa fa-plus"></i> <?php echo lang('add'); ?>课程服务
         </a>
     </blockquote>
     <fieldset class="layui-elem-field ">
-        <legend>课程服务{:lang('list')}</legend>
+        <legend>课程服务<?php echo lang('list'); ?></legend>
         <div class="layui-field-box table-responsive">
-            <form method="get" id="formSearch" action="{:url('lesson')}">
+            <form method="get" id="formSearch" action="<?php echo url('lesson'); ?>">
                 <div class="demoTable" style="margin-bottom: 10px;">
                     搜索课程：
                     <div class="layui-inline">
                         <input type="hidden" class="layui-input" value="1" name="pageIndex"  autocomplete="off">
-                        <input class="layui-input" value="{$keyword}" name="keyword" id="username" autocomplete="off">
+                        <input class="layui-input" value="<?php echo $keyword; ?>" name="keyword" id="username" autocomplete="off">
                     </div>
                     <button class="layui-btn" data-type="reload">搜索</button>
                 </div>
@@ -38,26 +39,26 @@
                     <th>课程服务简介</th>
                     <th>类型</th>
                     <th>创建时间</th>
-                    <th>{:lang('action')}</th>
+                    <th><?php echo lang('action'); ?></th>
                 </tr>
                 </thead>
                 <tbody>
-                {volist name="list" id="v"}
+                <?php if(is_array($list) || $list instanceof \think\Collection || $list instanceof \think\Paginator): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i;?>
                 <tr>
-                    <td>{$v.tol_lesson_name}</td>
-                    <td><img style="max-width:80px;max-height:60px;" src="{$v.tol_lesson_img}"/></td>
-                    <td>{$v.tol_lesson_content}</td>
-                    <td>{$v.tol_lesson_type}</td>
+                    <td><?php echo $v['tol_lesson_name']; ?></td>
+                    <td><img style="max-width:80px;max-height:60px;" src="<?php echo $v['tol_lesson_img']; ?>"/></td>
+                    <td><?php echo $v['tol_lesson_content']; ?></td>
+                    <td><?php echo $v['tol_lesson_type']; ?></td>
 
-                    <td>{$v.tol_create_time}</td>
+                    <td><?php echo $v['tol_create_time']; ?></td>
                     <td>
-                        <a href="javascript:void(0)" tol_id="{$v.tol_id}" id="layerDemo{$v.tol_id}" data-method="setTop" class="layui-btn layui-btn-mini">查看简介</a>
-                        <a href="{:url('lessonOrder',['tol_id'=>$v['tol_id']])}" class="layui-btn layui-btn-mini">查看预约</a>
-                        <a href="{:url('lessonEdit',['tol_id'=>$v['tol_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
-                        <a href="javascript:;" onclick="return del('{$v.tol_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
+                        <a href="javascript:void(0)" tol_id="<?php echo $v['tol_id']; ?>" id="layerDemo<?php echo $v['tol_id']; ?>" data-method="setTop" class="layui-btn layui-btn-mini">查看简介</a>
+                        <a href="<?php echo url('lessonOrder',['tol_id'=>$v['tol_id']]); ?>" class="layui-btn layui-btn-mini">查看预约</a>
+                        <a href="<?php echo url('lessonEdit',['tol_id'=>$v['tol_id']]); ?>" class="layui-btn layui-btn-mini"><?php echo lang('edit'); ?></a>
+                        <a href="javascript:;" onclick="return del('<?php echo $v['tol_id']; ?>')" class="layui-btn layui-btn-mini layui-btn-danger"><?php echo lang('del'); ?></a>
                     </td>
                 </tr>
-                {/volist}
+                <?php endforeach; endif; else: echo "" ;endif; ?>
                 </tbody>
                 <tfoot>
                 <tr>
@@ -79,8 +80,8 @@
         var form = layui.form(), layer = layui.layer;
     });
     function del(id) {
-        layer.confirm('{:lang("Are you sure you want to delete it")}', {icon: 3}, function (index) {
-            window.location.href = "{:url('lessonDel')}?tol_id="+id;
+        layer.confirm('<?php echo lang("Are you sure you want to delete it"); ?>', {icon: 3}, function (index) {
+            window.location.href = "<?php echo url('lessonDel'); ?>?tol_id="+id;
         });
     }
     layui.use('layer', function(obj){ //独立版的layer无需执行这一句
@@ -100,7 +101,7 @@
                         ($(window).height()*0.1)
                         ,($(window).width()*0.2)
                     ]
-                    ,content: "{:url('lessonView')}?tol_id="+pid
+                    ,content: "<?php echo url('lessonView'); ?>?tol_id="+pid
                     ,btn: ['关闭'] //只是为了演示
                     ,btn2: function(){
                         layer.closeAll();
@@ -121,8 +122,8 @@
 
         laypage({
             cont: 'paged'
-            ,pages: {$count}
-            ,curr:{$pageIndex}
+            ,pages: <?php echo $count; ?>
+            ,curr:<?php echo $pageIndex; ?>
             ,skip: true
             ,jump: function(obj, first){
                 //首次不执行

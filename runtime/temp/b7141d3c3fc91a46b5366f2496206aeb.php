@@ -1,9 +1,9 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:49:"F:\study\ch_admin/app/admin\view\index\index.html";i:1504775159;s:49:"F:\study\ch_admin/app/admin\view\common\head.html";i:1504592156;s:49:"F:\study\ch_admin/app/admin\view\common\foot.html";i:1504774955;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:3:{s:64:"/Users/lvjiluan/project/beqadmin/app/admin/view/index/index.html";i:1520141959;s:64:"/Users/lvjiluan/project/beqadmin/app/admin/view/common/head.html";i:1520141959;s:64:"/Users/lvjiluan/project/beqadmin/app/admin/view/common/foot.html";i:1520141959;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>WinMark后台管理</title>
+    <title>娃娃帮后台管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -28,7 +28,7 @@
     <div class="layui-main">
         <div class="admin-login-box">
             <a class="logo" style="left: 0;" href="<?php echo url('admin/index/index'); ?>">
-                <span style="font-size: 22px;">WinMark</span>
+                <span style="font-size: 22px;">贝儿圈后台管理</span>
             </a>
             <div class="admin-side-toggle">
                 <i class="fa fa-bars" aria-hidden="true"></i>
@@ -38,16 +38,16 @@
             </div>
         </div>
         <ul class="layui-nav admin-header-item">
-            <li class="layui-nav-item" id="cache">
+                <li class="layui-nav-item" id="cache">
                 <a href="javascript:;"><?php echo lang('clearCache'); ?></a>
             </li>
-            <li class="layui-nav-item">
-                <a href="<?php echo url('home/index/index'); ?>" target="_blank"><?php echo lang('home'); ?></a>
-            </li>
+            <!--<li class="layui-nav-item">-->
+                <!--<a href="<?php echo url('home/index/index'); ?>" target="_blank"><?php echo lang('home'); ?></a>-->
+            <!--</li>-->
             <li class="layui-nav-item">
                 <a href="javascript:;" class="admin-header-user">
                     <img src="__ADMIN__/images/0.jpg" />
-                    <span><?php echo session('username'); ?></span>
+                    <span><?php echo session('adm_username'); ?></span>
                 </a>
                 <dl class="layui-nav-child">
                     <dd>
@@ -87,7 +87,7 @@
     <div class="layui-footer footer footer-demo" id="admin-footer">
         <div class="layui-main">
             <p>2017 &copy;
-                <a href="javascript:void(0)">www.w-mark.com</a> LGPL license
+                <a href="javascript:void(0)">wwb.chenhoor.com</a> LGPL license
             </p>
         </div>
     </div>

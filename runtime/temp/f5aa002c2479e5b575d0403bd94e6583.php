@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:76:"/Users/lvjiluan/project/beqadmin/app/admin/view/organization/pictureAdd.html";i:1520263360;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +34,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">图片名称</label>
             <div class="layui-input-6">
-                <input type="text" name="top_title"  lay-verify="required" placeholder="{:lang('pleaseEnter')}图片名称" class="layui-input">
+                <input type="text" name="top_title"  lay-verify="required" placeholder="<?php echo lang('pleaseEnter'); ?>图片名称" class="layui-input">
             </div>
         </div>
 
@@ -53,7 +54,7 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" lay-submit="" lay-filter="auth">立即提交</button>
-                <a href="{:url('picture')}" class="layui-btn layui-btn-primary">返回</a>
+                <a href="<?php echo url('picture'); ?>" class="layui-btn layui-btn-primary">返回</a>
             </div>
         </div>
     </form>
@@ -64,12 +65,12 @@
 <script>
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope) {
-        $scope.ginfo = {$ginfo};
+        $scope.ginfo = <?php echo $ginfo; ?>;
         layui.use(['form', 'layer'], function () {
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
-                $.post("{:url('pictureAdd')}",data.field,function(res){
+                $.post("<?php echo url('pictureAdd'); ?>",data.field,function(res){
                     if(res.code > 0){
                         layer.msg(res.msg,{time:1800,icon:1},function(){
                             location.href = res.url;

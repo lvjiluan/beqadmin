@@ -512,7 +512,7 @@ class Content extends Common{
         $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
         $pageSize =5;
         $page = $pageIndex*$pageSize;
-        $list=db('question')->limit($page,$pageSize)->where($where)->select();
+        $list=db('question')->limit($page,$pageSize)->where($where)->order("tq_time desc")->select();
         foreach($list as $k => $v) {
             $org_result[$v['tq_id']] = $v["tq_org_arrid"];
         }
