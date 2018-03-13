@@ -38,9 +38,7 @@
                     <th>申请人</th>
                     <th>申请时间</th>
                     <th>状态</th>
-                    {if condition="$Think.const.ORG_ID neq 0"}
                     <th>{:lang('action')}</th>
-                    {/if}
                 </tr>
                 </thead>
                 <tbody>
@@ -51,14 +49,12 @@
                     <td>{$v.use_nickname}</td>
                     <td>{$v.tmu_create_time}</td>
                     <td>{$v.tmu_status}</td>
-                    {if condition="$Think.const.ORG_ID neq 0"}
                     <td>
                         {if condition="$v['tmu_status'] neq '审核通过'"}
                         <a href="{:url('joincircleEdit',['tmu_id'=>$v['tmu_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
                         <a href="javascript:;" onclick="return del('{$v.tmu_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
                         {/if}
                     </td>
-                    {/if}
                 </tr>
                 {/volist}
                 </tbody>
