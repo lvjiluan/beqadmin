@@ -63,7 +63,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">文章内容</label>
             <div class="layui-input-block">
-                <textarea name="tma_content" ng-model="field.tma_content" lay-verify="required" placeholder="请输入文章内容" class="layui-textarea"></textarea>
+                <textarea name="tma_content" id="tma_content" ng-model="field.tma_content" lay-verify="required" placeholder="请输入文章内容" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -82,10 +82,32 @@
     m.controller('ctrl',['$scope',function($scope){
         $scope.field = '{$articleinfo}'!='null'?{$articleinfo}:{tma_id:'',tma_title:'',tma_content:'',tma_tmdid:'',tma_excellent:'',tma_istot:''};
         $scope.momentinfo = {$momentinfo};
-        layui.use(['form', 'layer'], function () {
+        layui.use(['form', 'layer','layedit'], function () {
+
+            var layedit = layui.layedit;
+            layedit.set({
+                uploadImage: {
+                    url: '{:url("UpFiles/editUpload")}' //接口url
+                    ,type: '' //默认post
+                }
+            });
+            layedit.build('tma_content'); //建立编辑器
             var form = layui.form(),layer = layui.layer;
+            //自定义验证规则
+            form.verify({
+                tma_content: function(value){
+                    if(layedit.getContent(1).length < 4){
+                        return '内容请输入至少4个字符';
+                    }
+                }
+            });
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
+                data.field.tma_content= layui.layedit.getContent(1);
+                if(!data.field.tma_content) {
+                    alert("圈子文章内容不能为空！");
+                    return false;
+                }
                 data.field.tma_id =  $scope.field.tma_id;
                 $.post("{:url('circlearticleEdit')}",data.field,function(res){
                     if(res.code > 0){

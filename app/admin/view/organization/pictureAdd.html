@@ -22,10 +22,10 @@
     <form class="layui-form layui-form-pane">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">所属图册</label>
+            <label class="layui-form-label">所属机构</label>
             <div class="layui-input-4">
-                <select name="top_opiid" lay-verify="required" ng-model="field.top_opiid" ng-options="v.opi_id as v.opi_title for v in ginfo" >
-                    <option value="">请选择所属图册</option>
+                <select name="opi_orgid" lay-verify="required" ng-model="field.opi_orgid" ng-options="v.org_id as v.org_name for v in ginfo" >
+                    <option value="">请选择所属机构</option>
                 </select>
             </div>
         </div>
@@ -33,7 +33,15 @@
         <div class="layui-form-item">
             <label class="layui-form-label">图片名称</label>
             <div class="layui-input-6">
-                <input type="text" name="top_title"  lay-verify="required" placeholder="{:lang('pleaseEnter')}图片名称" class="layui-input">
+                <input type="text" name="opi_title"  lay-verify="required" placeholder="{:lang('pleaseEnter')}图片名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="opi_type" ng-model="field.opi_type" ng-checked="field.tma_istop=='1'" ng-value="1" title="环境">
+                <input type="radio" name="opi_type" ng-model="field.opi_type" ng-checked="field.tma_istop=='0'" ng-value="0" title="全部">
             </div>
         </div>
 

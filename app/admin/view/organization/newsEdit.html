@@ -34,15 +34,21 @@
         <div class="layui-form-item">
             <label class="layui-form-label">机构</label>
             <div class="layui-input-4">
-                <select name="pco_orgid" lay-verify="required" ng-model="field.pco_orgid" ng-options="v.org_id as v.org_name for v in orginfo" >
+                <select name="inf_jump_value" lay-verify="required" ng-model="field.inf_jump_value" ng-options="v.org_id as v.org_name for v in orginfo" >
                     <option value="">请选择推送机构</option>
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">推送标题</label>
+            <div class="layui-input-6">
+                <input type="text" name="inf_title"  lay-verify="required" ng_model="field.inf_title"  placeholder="{:lang('pleaseEnter')}推送标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">推送内容</label>
             <div class="layui-input-6">
-                <input type="text" name="pco_content" lay-verify="required" ng_model="field.pco_content" placeholder="{:lang('pleaseEnter')}推送内容" class="layui-input">
+                <input type="text" name="inf_content" lay-verify="required" ng_model="field.inf_content" placeholder="{:lang('pleaseEnter')}推送内容" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -59,13 +65,13 @@
 <script>
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope){
-        $scope.field = '{$newsinfo}'!='null'?{$newsinfo}:{pco_id:'',pco_content:''};
+        $scope.field = '{$newsinfo}'!='null'?{$newsinfo}:{inf_id:'',inf_content:''};
         $scope.orginfo = {$orginfo};
         layui.use(['form', 'layer'], function () {
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
-                data.field.pco_id =  $scope.field.pco_id;
+                data.field.inf_id =  $scope.field.inf_id;
                 $.post("{:url('newsEdit')}",data.field,function(res){
                     if(res.code > 0){
                         layer.msg(res.msg,{time:1800},function(){

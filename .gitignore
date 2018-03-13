@@ -1,0 +1,11 @@
+﻿## 缓存文件不需要添加到git runtime
+## 编辑器配置不需要添加.idea
+## svn 配置不需要添加
+runtime
+.idea
+.svn
+
+
+
+
+

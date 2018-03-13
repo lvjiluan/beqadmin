@@ -14,7 +14,7 @@ class Index extends Common
         //导航
         if($_SESSION['think']['adm_id']) {
             $ainfo = db('admin')
-                ->join('tes_auth_group','adm_id = agr_id','left')
+                ->join('tes_auth_group','adm_groupid = agr_id','left')
                 ->where('adm_id='.$_SESSION['think']['adm_id'])->find();
         }
         $authRule = [];

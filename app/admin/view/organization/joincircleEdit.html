@@ -25,10 +25,10 @@
     <form class="layui-form layui-form-pane">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">机构</label>
+            <label class="layui-form-label">圈子</label>
             <div class="layui-input-4">
-                <select name="oap_orgid" lay-verify="required" ng-model="field.oap_orgid" ng-options="v.org_id as v.org_name for v in orginfo" >
-                    <option value="">请选择所属机构</option>
+                <select name="tmu_moments_id" lay-verify="required" ng-model="field.tmu_moments_id" ng-options="v.tmd_id as v.tmd_name for v in minfo" >
+                    <option value="">请选择所属圈子</option>
                 </select>
             </div>
         </div>
@@ -36,9 +36,19 @@
         <div class="layui-form-item">
             <label class="layui-form-label">用户</label>
             <div class="layui-input-4">
-                <select name="oap_userid" lay-verify="required" ng-model="field.oap_userid" ng-options="v.use_id as v.use_nickname for v in userinfo" >
+                <select name="tmu_user_id" lay-verify="required" ng-model="field.tmu_user_id" ng-options="v.use_id as v.use_nickname for v in userinfo" >
                     <option value="">请选择用户</option>
                 </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="tmu_status" ng-model="field.tmu_status" ng-checked="field.tmu_status=='0'" ng-value="0" title="审核中">
+                <input type="radio" name="tmu_status" ng-model="field.tmu_status" ng-checked="field.tmu_status=='1'" ng-value="1" title="审核通过">
+                <input type="radio" name="tmu_status" ng-model="field.tmu_status" ng-checked="field.tmu_status=='2'" ng-value="2" title="审核失败">
+                <input type="radio" name="tmu_status" ng-model="field.tmu_status" ng-checked="field.tmu_status=='3'" ng-value="3" title="退出圈子">
             </div>
         </div>
 
@@ -56,14 +66,14 @@
 <script>
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope){
-        $scope.field = '{$applyinfo}'!='null'?{$applyinfo}:{oap_id:'',oap_userid:'',oap_orgid:''};
-        $scope.orginfo = {$orginfo};
+        $scope.field = '{$applyinfo}'!='null'?{$applyinfo}:{tmu_id:'',tmu_user_id:'',tmu_moments_id:''};
+        $scope.minfo = {$minfo};
         $scope.userinfo = {$userinfo};
         layui.use(['form', 'layer'], function () {
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
-                data.field.oap_id =  $scope.field.oap_id;
+                data.field.tmu_id =  $scope.field.tmu_id;
                 $.post("{:url('joincircleEdit')}",data.field,function(res){
                     if(res.code > 0){
                         layer.msg(res.msg,{time:1800},function(){

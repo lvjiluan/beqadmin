@@ -510,7 +510,7 @@ class Content extends Common{
             $where['tp_content'] = array("like","%".$keyword."%");
         }
         $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
-        $pageSize =5;
+        $pageSize =10;
         $page = $pageIndex*$pageSize;
         $list=db('question')->limit($page,$pageSize)->where($where)->order("tq_time desc")->select();
         foreach($list as $k => $v) {

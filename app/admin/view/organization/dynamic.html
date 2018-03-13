@@ -20,6 +20,16 @@
     <fieldset class="layui-elem-field ">
         <legend>动态{:lang('list')}</legend>
         <div class="layui-field-box table-responsive">
+            <form method="get" id="formSearch" action="{:url('dynamic')}">
+                <div class="demoTable" style="margin-bottom: 10px;">
+                    搜索发布人：
+                    <div class="layui-inline">
+                        <input type="hidden" class="layui-input" value="1" name="pageIndex"  autocomplete="off">
+                        <input class="layui-input" value="{$keyword}" name="keyword" id="username" autocomplete="off">
+                    </div>
+                    <button class="layui-btn" data-type="reload">搜索</button>
+                </div>
+            </form>
             <table class=" layui-table table-hover">
                 <thead>
                 <tr>
@@ -48,6 +58,14 @@
                 </tr>
                 {/volist}
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="10">
+                        <!--分页容器-->
+                        <div id="paged" style="text-align: right"></div>
+                    </td>
+                </tr>
+                </tfoot>
             </table>
 
         </div>
@@ -69,6 +87,33 @@
             window.location.href = "{:url('dynamicDel')}?ody_id="+id;
         });
     }
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        laypage({
+            cont: 'paged'
+            ,pages: {$count}
+            ,curr:{$pageIndex}
+            ,skip: true
+            ,jump: function(obj, first){
+                //首次不执行
+                if(!first){
+                    var keyword = $("#username").val();
+                    if(keyword) {
+                        location.href="/admin/organization/dynamic.html?pageIndex="+obj.curr+"&keyword="+keyword;
+                    } else {
+                        location.href="/admin/organization/dynamic.html?pageIndex="+obj.curr;
+                    }
+
+                    //do something
+                }
+            }
+        });
+        $('.demoTable .layui-btn').on('click', function(){
+            $("#formSearch").submit();
+        });
+
+    });
 
 </script>
 </body>

@@ -12,57 +12,68 @@
 
 <body>
 <div class="admin-main">
-    {if condition="$Think.const.ORG_ID elt 0"}<blockquote class="layui-elem-quote">
+    <blockquote class="layui-elem-quote">
         <a href="{:url('joincircleAdd')}" class="layui-btn layui-btn-small">
             <i class="fa fa-plus"></i> {:lang('add')}申请
         </a>
-    </blockquote>{/if}
+    </blockquote>
     <fieldset class="layui-elem-field ">
         <legend>申请{:lang('list')}</legend>
         <div class="layui-field-box table-responsive">
+            <form method="get" id="formSearch" action="{:url('joincircle')}">
+                <div class="demoTable" style="margin-bottom: 10px;">
+                    搜索圈子名称：
+                    <div class="layui-inline">
+                        <input type="hidden" class="layui-input" value="1" name="pageIndex"  autocomplete="off">
+                        <input class="layui-input" value="{$keyword}" name="keyword" id="username" autocomplete="off">
+                    </div>
+                    <button class="layui-btn" data-type="reload">搜索</button>
+                </div>
+            </form>
             <table class=" layui-table table-hover">
                 <thead>
                 <tr>
                     <th>序号</th>
-                    <th>机构</th>
+                    <th>圈子</th>
                     <th>申请人</th>
                     <th>申请时间</th>
                     <th>状态</th>
+                    {if condition="$Think.const.ORG_ID neq 0"}
                     <th>{:lang('action')}</th>
+                    {/if}
                 </tr>
                 </thead>
                 <tbody>
                 {volist name="list" id="v"}
                 <tr>
-                    <td>{$v.oap_id}</td>
-                    <td>{$v.org_name}</td>
+                    <td>{$v.tmu_id}</td>
+                    <td>{$v.tmd_name}</td>
                     <td>{$v.use_nickname}</td>
-                    <td>{$v.oap_time}</td>
-                    <td>{$v.oap_status}</td>
+                    <td>{$v.tmu_create_time}</td>
+                    <td>{$v.tmu_status}</td>
+                    {if condition="$Think.const.ORG_ID neq 0"}
                     <td>
-                        {if condition="$v['oap_status'] eq '未审核'"}
-                        {if condition="$Think.const.ORG_ID eq 0"}
-                        <a href="javascript:;" onclick="return sta('{$v.oap_id}')" class="layui-btn layui-btn-mini">通过</a>
-                        <a href="javascript:;" onclick="return nsta('{$v.oap_id}')" class="layui-btn layui-btn-mini layui-btn-danger">不通过</a>
-                        {/if}
-                        {if condition="$Think.const.ORG_ID neq 0"}
-                        <a href="{:url('joincircleEdit',['oap_id'=>$v['oap_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
-                        <a href="javascript:;" onclick="return del('{$v.oap_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
-                        {/if}
+                        {if condition="$v['tmu_status'] neq '审核通过'"}
+                        <a href="{:url('joincircleEdit',['tmu_id'=>$v['tmu_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
+                        <a href="javascript:;" onclick="return del('{$v.tmu_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
                         {/if}
                     </td>
+                    {/if}
                 </tr>
                 {/volist}
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="10">
+                        <!--分页容器-->
+                        <div id="paged" style="text-align: right"></div>
+                    </td>
+                </tr>
+                </tfoot>
             </table>
 
         </div>
     </fieldset>
-    <div class="admin-table-page">
-        <div id="page" class="page">
-            {$page}
-        </div>
-    </div>
 </div>
 <script type="text/javascript" src="__ADMIN__/plugins/layui/layui.js"></script>
 <script src="__STATIC__/js/jquery.2.1.1.min.js"></script>
@@ -72,20 +83,48 @@
     });
     function del(id) {
         layer.confirm('{:lang("Are you sure you want to delete it")}', {icon: 3}, function (index) {
-            window.location.href = "{:url('joincircleDel')}?oap_id="+id;
+            window.location.href = "{:url('joincircleDel')}?tmu_id="+id;
         });
     }
 
-    function sta(id) {
-        layer.confirm('确定通过？操作后不能更改！', {icon: 3}, function (index) {
-            window.location.href = "{:url('joincircleStatus')}?oap_id="+id+"&sta=3";
+    // function sta(id) {
+    //     layer.confirm('确定通过？操作后不能更改！', {icon: 3}, function (index) {
+    //         window.location.href = "{:url('joincircleStatus')}?oap_id="+id+"&sta=3";
+    //     });
+    // }
+    // function nsta(id) {
+    //     layer.confirm('确定不通过？操作后不能更改！', {icon: 3}, function (index) {
+    //         window.location.href = "{:url('joincircleStatus')}?oap_id="+id+"&sta=2";
+    //     });
+    // }
+
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        laypage({
+            cont: 'paged'
+            ,pages: {$count}
+            ,curr:{$pageIndex}
+            ,skip: true
+            ,jump: function(obj, first){
+                //首次不执行
+                if(!first){
+                    var keyword = $("#username").val();
+                    if(keyword) {
+                        location.href="/admin/organization/joincircle.html?pageIndex="+obj.curr+"&keyword="+keyword;
+                    } else {
+                        location.href="/admin/organization/joincircle.html?pageIndex="+obj.curr;
+                    }
+
+                    //do something
+                }
+            }
         });
-    }
-    function nsta(id) {
-        layer.confirm('确定不通过？操作后不能更改！', {icon: 3}, function (index) {
-            window.location.href = "{:url('joincircleStatus')}?oap_id="+id+"&sta=2";
+        $('.demoTable .layui-btn').on('click', function(){
+            $("#formSearch").submit();
         });
-    }
+
+    });
 </script>
 </body>
 
