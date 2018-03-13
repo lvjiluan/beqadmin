@@ -24,27 +24,35 @@
 
     <form class="layui-form layui-form-pane">
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">所属图册</label>
-            <div class="layui-input-4">
-                <select name="top_opiid" lay-verify="required" ng-model="field.top_opiid" ng-options="v.opi_id as v.opi_title for v in ginfo" >
-                    <option value="">请选择所属图册</option>
-                </select>
-            </div>
-        </div>
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">所属图册</label>-->
+            <!--<div class="layui-input-4">-->
+                <!--<select name="top_opiid" lay-verify="required" ng-model="field.top_opiid" ng-options="v.opi_id as v.opi_title for v in ginfo" >-->
+                    <!--<option value="">请选择所属图册</option>-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <div class="layui-form-item">
-            <label class="layui-form-label">机构</label>
+            <label class="layui-form-label">所属机构</label>
             <div class="layui-input-4">
-                <select name="pco_orgid" lay-verify="required" ng-model="field.pco_orgid" ng-options="v.org_id as v.org_name for v in orginfo" >
-                    <option value="">请选择推送机构</option>
+                <select name="opi_orgid" lay-verify="required" ng-model="field.opi_orgid" ng-options="v.org_id as v.org_name for v in ginfo" >
+                    <option value="">请选择所属机构</option>
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">图片名称</label>
             <div class="layui-input-6">
-                <input type="text" name="top_title" ng-model="field.top_title" lay-verify="required" placeholder="{:lang('pleaseEnter')}图片名称" class="layui-input">
+                <input type="text" name="opi_title" ng-model="field.opi_title" lay-verify="required" placeholder="{:lang('pleaseEnter')}图片名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">图片类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="opi_type" ng-model="field.opi_type" ng-checked="field.opi_type=='1'" ng-value="1" title="环境">
+                <input type="radio" name="opi_type" ng-model="field.opi_type" ng-checked="field.opi_type=='0'" ng-value="0" title="全部">
             </div>
         </div>
 
@@ -75,16 +83,16 @@
 <script>
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope){
-        $scope.field = '{$picinfo}'!='null'?{$picinfo}:{top_id:'',top_title:'',top_opiid:''};
+        $scope.field = '{$picinfo}'!='null'?{$picinfo}:{opi_id:'',opi_title:'',opi_orgid:''};
         $scope.ginfo = {$ginfo};
-        if($scope.field.top_picurl){
-            cltThumb.src = $scope.field.top_picurl;
+        if($scope.field.opi_img_url){
+            cltThumb.src = $scope.field.opi_img_url;
         }
         layui.use(['form', 'layer'], function () {
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
-                data.field.top_id =  $scope.field.top_id;
+                data.field.opi_id =  $scope.field.opi_id;
                 $.post("{:url('pictureEdit')}",data.field,function(res){
                     if(res.code > 0){
                         layer.msg(res.msg,{time:1800},function(){

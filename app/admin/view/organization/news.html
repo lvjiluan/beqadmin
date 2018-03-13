@@ -20,13 +20,24 @@
     <fieldset class="layui-elem-field ">
         <legend>消息推送{:lang('list')}</legend>
         <div class="layui-field-box table-responsive">
+            <form method="get" id="formSearch" action="{:url('news')}">
+                <div class="demoTable" style="margin-bottom: 10px;">
+                    搜索图册名称：
+                    <div class="layui-inline">
+                        <input type="hidden" class="layui-input" value="1" name="pageIndex"  autocomplete="off">
+                        <input class="layui-input" value="{$keyword}" name="keyword" id="username" autocomplete="off">
+                    </div>
+                    <button class="layui-btn" data-type="reload">搜索</button>
+                </div>
+            </form>
             <table class=" layui-table table-hover">
                 <thead>
                 <tr>
                     <th>序号</th>
                     <th>推送类型</th>
-                    <th>推送范围</th>
+                    <th>推送标题</th>
                     <th>推送内容</th>
+                    <th>推送状态</th>
                     <th>推送时间</th>
                     <th>{:lang('action')}</th>
                 </tr>
@@ -34,27 +45,31 @@
                 <tbody>
                 {volist name="list" id="v"}
                 <tr>
-                    <td>{$v.pco_id}</td>
-                    <td>{$v.pco_type}</td>
-                    <td>{if condition="$v['org_name'] neq ''"}"{$v.org_name}"圈内{else /}{$v.org_name}{/if}</td>
-                    <td>{$v.pco_content}</td>
-                    <td>{$v.pco_time}</td>
+                    <td>{$v.inf_id}</td>
+                    <td>{$v.inf_type}</td>
+                    <td>{$v.inf_title}</td>
+                    <td>{$v.inf_content}</td>
+                    <td>{$v.inf_status}</td>
+                    <td>{$v.inf_time}</td>
                     <td>
-                        <a href="{:url('newsEdit',['pco_id'=>$v['pco_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
-                        <a href="javascript:;" onclick="return del('{$v.pco_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
+                        <a href="{:url('newsEdit',['inf_id'=>$v['inf_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
+                        <a href="javascript:;" onclick="return del('{$v.inf_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
                     </td>
                 </tr>
                 {/volist}
                 </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="10">
+                        <!--分页容器-->
+                        <div id="paged" style="text-align: right"></div>
+                    </td>
+                </tr>
+                </tfoot>
             </table>
 
         </div>
     </fieldset>
-    <div class="admin-table-page">
-        <div id="page" class="page">
-            {$page}
-        </div>
-    </div>
 </div>
 <script type="text/javascript" src="__ADMIN__/plugins/layui/layui.js"></script>
 <script src="__STATIC__/js/jquery.2.1.1.min.js"></script>
@@ -64,9 +79,37 @@
     });
     function del(id) {
         layer.confirm('{:lang("Are you sure you want to delete it")}', {icon: 3}, function (index) {
-            window.location.href = "{:url('news')}?pco_id="+id;
+            window.location.href = "{:url('newsDel')}?inf_id="+id;
         });
     }
+
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        laypage({
+            cont: 'paged'
+            ,pages: {$count}
+            ,curr:{$pageIndex}
+            ,skip: true
+            ,jump: function(obj, first){
+                //首次不执行
+                if(!first){
+                    var keyword = $("#username").val();
+                    if(keyword) {
+                        location.href="/admin/organization/news.html?pageIndex="+obj.curr+"&keyword="+keyword;
+                    } else {
+                        location.href="/admin/organization/news.html?pageIndex="+obj.curr;
+                    }
+
+                    //do something
+                }
+            }
+        });
+        $('.demoTable .layui-btn').on('click', function(){
+            $("#formSearch").submit();
+        });
+
+    });
 
 </script>
 </body>

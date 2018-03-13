@@ -17,10 +17,36 @@ class Organization extends Common{
     public function basic() {
         $this->orgid > 0 && $where["org_id"] = $this->orgid;
         $where["org_status"] = 1;
+
+        $data=input('get.');
+        $keyword = $data["keyword"];
+        $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
+        $pageSize =6;
+        $page = $pageIndex*$pageSize;
+        if($keyword) {
+            $where["org_name"] = array("like","%".$keyword."%");
+        }
+
         $list=db('org_info')
             ->join('tes_org_detail','org_id = ode_orgid','left')
+            ->limit($page,$pageSize)
             ->where($where)
             ->select();
+
+        $type = array(0=>"系统消息", 1=>"机构评论回复", 2=>"商家消息");
+        $status = array(0=>"未读取", 1=>"已读", 2=>"已删除");
+        foreach($list as $k => $v) {
+            $list[$k]["inf_type"] = $type[$v["inf_type"]];
+            $list[$k]["inf_status"] = $status[$v["inf_status"]];
+        }
+
+        $count=db('org_info')
+            ->join('tes_org_detail','org_id = ode_orgid','left')
+            ->where($where)->count();
+        $pagecount = ceil($count/$pageSize);
+        $this->assign('keyword',$keyword);
+        $this->assign('pageIndex',$pageIndex+1);
+        $this->assign('count',$pagecount);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -342,10 +368,27 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function picture() {
-        $list=db('org_photoes')
-            ->join('tes_org_gallery','opi_id = top_opiid','left')
+        $data=input('get.');
+        $keyword = $data["keyword"];
+        $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
+        $pageSize =10;
+        $page = $pageIndex*$pageSize;
+        if($keyword) {
+            $where["opi_title"] = array("like","%".$keyword."%");
+        }
+        $list=db('org_gallery')
             ->join('tes_org_info','opi_orgid = org_id','left')
-            ->select();
+            ->limit($page,$pageSize)->where($where)->select();
+        $type =array("全部","环境");
+        foreach($list as $k => $v) {
+            $list[$k]["opi_type"] = $type[$v["opi_type"]];
+        }
+
+        $count=db('org_gallery')->where($where)->count();
+        $pagecount = ceil($count/$pageSize);
+        $this->assign('keyword',$keyword);
+        $this->assign('pageIndex',$pageIndex+1);
+        $this->assign('count',$pagecount);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -369,12 +412,12 @@ class Organization extends Common{
                 $imgurlmod->suffix = $houzui;
                 $imgurlres = $imgurlmod->apiupload();
                 // 调用img上传接口类结束
-                $data['top_picurl'] = APIIMGHOST.$imgurlres['path'];
+                $data['opi_img_url'] = APIIMGHOST.$imgurlres['path'];
             }
-            $opiId = explode(':',$data['top_opiid']);
-            $data['top_opiid'] =$opiId[1];
-            $data['top_time'] = date("Y-m-d H:i:s",time());
-            db('org_photoes')->insert($data);
+            $opiId = explode(':',$data['opi_orgid']);
+            $data['opi_orgid'] =$opiId[1];
+            $data['opi_time'] = date("Y-m-d H:i:s",time());
+            db('org_gallery')->insert($data);
             $result['msg'] = '添加成功!';
             $result['url'] = url('picture');
             $result['code'] = 1;
@@ -382,13 +425,12 @@ class Organization extends Common{
         }else{
             $this->orgid > 0 && $where["org_id"] = $this->orgid;
             $where["org_status"] = 1;
-            $ginfo = db('org_gallery')
-                ->join("tes_org_info",'opi_orgid = org_id','left')
+            $ginfo = db('org_info')
                 ->where($where)
                 ->select();
-            foreach($ginfo as $k => $v) {
-                $ginfo[$k]["opi_title"] = $v["opi_title"]."-".$v["org_name"];
-            }
+//            foreach($ginfo as $k => $v) {
+//                $ginfo[$k]["opi_title"] = $v["opi_title"]."-".$v["org_name"];
+//            }
             $this->assign('ginfo', json_encode($ginfo,true));
             return $this->fetch();
         }
@@ -412,25 +454,23 @@ class Organization extends Common{
                 $imgurlmod->suffix = $houzui;
                 $imgurlres = $imgurlmod->apiupload();
                 // 调用img上传接口类结束
-                $data['top_picurl'] = APIIMGHOST.$imgurlres['path'];
+                $data['opi_img_url'] = APIIMGHOST.$imgurlres['path'];
             }
-            $opiId = explode(':',$data['top_opiid']);
-            $data['top_opiid'] =$opiId[1];
-            $data['top_time'] = date("Y-m-d H:i:s",time());
-            $where['top_id'] = input('post.top_id');
-            db('org_photoes')->where($where)->update($data);
+            $opiId = explode(':',$data['opi_orgid']);
+            $data['opi_orgid'] =$opiId[1];
+            $where['opi_id'] = input('post.opi_id');
+            db('org_gallery')->where($where)->update($data);
             $result['msg'] = '修改成功!';
             $result['url'] = url('picture');
             $result['code'] = 1;
             return $result;
         }else{
-            $top_id = input('top_id');
-            $picinfo = db('org_photoes')->where(array("top_id"=>$top_id))->find();
+            $opi_id = input('opi_id');
+            $picinfo = db('org_gallery')->where(array("opi_id"=>$opi_id))->find();
             $this->assign('picinfo', json_encode($picinfo,true));
             $this->orgid > 0 && $where["org_id"] = $this->orgid;
             $where["org_status"] = 1;
-            $ginfo = db('org_gallery')
-                ->join("tes_org_info",'opi_orgid = org_id','left')
+            $ginfo = db('org_info')
                 ->where($where)
                 ->select();
             $this->assign('ginfo', json_encode($ginfo,true));
@@ -445,14 +485,14 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function pictureDel(){
-        $top_id=input('top_id');
-        if (empty($top_id)){
+        $opi_id=input('opi_id');
+        if (empty($opi_id)){
             $result['status'] = 0;
             $result['info'] = 'ID不存在!';
             $result['url'] = url('picture');
             exit;
         }
-        db('org_photoes')->where('top_id='.$top_id)->delete();
+        db('org_gallery')->where('opi_id='.$opi_id)->delete();
         $this->redirect('picture');
     }
 
@@ -463,11 +503,29 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function comment() {
+        $data=input('get.');
+        $keyword = $data["keyword"];
+        $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
+        $pageSize =10;
+        $page = $pageIndex*$pageSize;
+        if($keyword) {
+            $where["oco_content"] = array("like","%".$keyword."%");
+        }
         $list=db('org_comment')
             ->join('tes_org_info','org_id = oco_orgid','left')
             ->join('tes_user_info','use_id = oco_userid','left')
             ->order("oco_time desc")
-            ->select();
+            ->limit($page,$pageSize)->where($where)->select();
+
+        $count=db('org_comment')
+            ->join('tes_org_info','org_id = oco_orgid','left')
+            ->join('tes_user_info','use_id = oco_userid','left')
+            ->order("oco_time desc")
+            ->where($where)->count();
+        $pagecount = ceil($count/$pageSize);
+        $this->assign('keyword',$keyword);
+        $this->assign('pageIndex',$pageIndex+1);
+        $this->assign('count',$pagecount);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -609,14 +667,30 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function joincircle() {
-        $list=db('org_apply')
-            ->join('tes_user_info','use_id = oap_userid','left')
-            ->join('tes_org_info','org_id = oap_orgid','left')
-            ->select();
-        $status = array(1=>"未审核",2=>"未通过",3=>"已通过");
-        foreach($list as $k => $v) {
-            $list[$k]["oap_status"] = $status[$v['oap_status']];
+        $data=input('get.');
+        $keyword = $data["keyword"];
+        $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
+        $pageSize =10;
+        $page = $pageIndex*$pageSize;
+        if($keyword) {
+            $where["tmd_name"] = array("like","%".$keyword."%");
         }
+        $list=db('moments_user')
+            ->join('tes_user_info','use_id = tmu_user_id','left')
+            ->join('moments','tmd_id = tmu_moments_id','left')
+            ->limit($page,$pageSize)->where($where)->select();
+        $status =array("审核中","审核通过","审核失败","退出圈子");
+        foreach($list as $k => $v) {
+            $list[$k]["tmu_status"] = $status[$v["tmu_status"]];
+        }
+        $count=db('moments_user')
+            ->join('tes_user_info','use_id = tmu_user_id','left')
+            ->join('moments','tmd_id = tmu_moments_id','left')
+            ->where($where)->count();
+        $pagecount = ceil($count/$pageSize);
+        $this->assign('keyword',$keyword);
+        $this->assign('pageIndex',$pageIndex+1);
+        $this->assign('count',$pagecount);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -630,13 +704,12 @@ class Organization extends Common{
     public function joincircleAdd(){
         if(request()->isPost()) {
             $data=input('post.');
-            $opiId = explode(':',$data['oap_userid']);
-            $data['oap_userid'] =$opiId[1];
-            $orgId = explode(':',$data['oap_orgid']);
-            $data['oap_orgid'] =$orgId[1];
-            $data['oap_status'] = 1;
-            $data['oap_time'] = date("Y-m-d H:i:s",time());
-            db('org_apply')->insert($data);
+            $opiId = explode(':',$data['tmu_user_id']);
+            $data['tmu_user_id'] =$opiId[1];
+            $orgId = explode(':',$data['tmu_moments_id']);
+            $data['tmu_moments_id'] =$orgId[1];
+            $data['tmu_create_time'] = date("Y-m-d H:i:s",time());
+            db('moments_user')->insert($data);
             $result['msg'] = '添加成功!';
             $result['url'] = url('joincircle');
             $result['code'] = 1;
@@ -646,8 +719,13 @@ class Organization extends Common{
             $this->assign('userinfo', json_encode($userinfo,true));
             $this->orgid > 0 && $where["org_id"] = $this->orgid;
             $where["org_status"] = 1;
-            $orginfo = db('org_info')->where($where)->select();
-            $this->assign('orginfo', json_encode($orginfo,true));
+            if($where["org_id"]) {
+                $orginfo = db('org_info')->where($where)->find();
+            }
+            $orginfo["org_id"] && $wherec["tmd_id"] = $orginfo["org_id"];
+            $wherec["tmd_status"] = 1;
+            $minfo = db('moments')->where($wherec)->select();
+            $this->assign('minfo', json_encode($minfo,true));
             return $this->fetch();
         }
     }
@@ -660,26 +738,32 @@ class Organization extends Common{
     public function joincircleEdit(){
         if(request()->isPost()){
             $data=input('post.');
-            $opiId = explode(':',$data['oap_userid']);
-            $data['oap_userid'] =$opiId[1];
-            $orgId = explode(':',$data['oap_orgid']);
-            $data['oap_orgid'] =$orgId[1];
-            $where['oap_id'] = input('post.oap_id');
-            db('org_apply')->where($where)->update($data);
+            $opiId = explode(':',$data['tmu_user_id']);
+            $data['tmu_user_id'] =$opiId[1];
+            $orgId = explode(':',$data['tmu_moments_id']);
+            $data['tmu_moments_id'] =$orgId[1];
+            $data['tmu_update_time'] = date("Y-m-d H:i:s",time());
+            $where['tmu_id'] = input('post.tmu_id');
+            db('moments_user')->where($where)->update($data);
             $result['msg'] = '修改成功!';
             $result['url'] = url('joincircle');
             $result['code'] = 1;
             return $result;
         }else{
-            $oap_id = input('oap_id');
-            $applyinfo = db('org_apply')->where(array("oap_id"=>$oap_id))->find();
+            $tmu_id = input('tmu_id');
+            $applyinfo = db('moments_user')->where(array("tmu_id"=>$tmu_id))->find();
             $this->assign('applyinfo', json_encode($applyinfo,true));
             $userinfo = db('user_info')->select();
             $this->assign('userinfo', json_encode($userinfo,true));
             $this->orgid > 0 && $where["org_id"] = $this->orgid;
             $where["org_status"] = 1;
-            $orginfo = db('org_info')->where($where)->select();
-            $this->assign('orginfo', json_encode($orginfo,true));
+            if($where["org_id"]) {
+                $orginfo = db('org_info')->where($where)->find();
+            }
+            $orginfo["org_id"] && $wherec["tmd_orgid"] = $orginfo["org_id"];
+            $wherec["tmd_status"] = 1;
+            $minfo = db('moments')->where($wherec)->select();
+            $this->assign('minfo', json_encode($minfo,true));
             return $this->fetch();
         }
 
@@ -729,10 +813,31 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function dynamic() {
+        $data=input('get.');
+        $keyword = $data["keyword"];
+        $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
+        $pageSize =10;
+        $page = $pageIndex*$pageSize;
+        if($keyword) {
+            $where["use_nickname"] = array("like","%".$keyword."%");
+        }
         $list=db('org_dynamic')
             ->join('tes_user_info','use_id = ody_userid','left')
             ->join('tes_org_info','org_id = ody_orgid','left')
-            ->select();
+            ->limit($page,$pageSize)->where($where)->select();
+        $status = array(1=>"未审核",2=>"未通过",3=>"已通过");
+        foreach($list as $k => $v) {
+            $list[$k]["oap_status"] = $status[$v['oap_status']];
+        }
+
+        $count=db('org_dynamic')
+            ->join('tes_user_info','use_id = ody_userid','left')
+            ->join('tes_org_info','org_id = ody_orgid','left')
+            ->where($where)->count();
+        $pagecount = ceil($count/$pageSize);
+        $this->assign('keyword',$keyword);
+        $this->assign('pageIndex',$pageIndex+1);
+        $this->assign('count',$pagecount);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -1054,10 +1159,41 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function news() {
-        $list=db('push_content')
-            ->join('tes_org_info','org_id = pco_orgid','left')
-            ->where(array("pco_type"=>1))
-            ->select();
+//        // 关联机构
+//        $list1=db('system_infor')
+//            ->join('tes_org_info','org_id = inf_jump_value','left')
+//            ->where(array("inf_type"=>array("in","0,2")))
+//            ->select();
+//        // 关联评论
+//        $list2=db('system_infor')
+//            ->join('tes_org_comment','oco_id = inf_jump_value','left')
+//            ->where(array("inf_type"=>1))
+//            ->select();
+//        $list = db()->query("select * from((select inf_id,inf_title,inf_content,inf_time,inf_type,inf_status,org_name as inf_jump_value from tes_system_infor as infor1 left join tes_org_info on org_id = inf_jump_value where inf_type in (0,2)) union
+//              (select inf_id,inf_title,inf_content,inf_time,inf_type,inf_status,oco_content as inf_jump_value from tes_system_infor as infor2 left join tes_org_comment on oco_id = inf_jump_value where inf_type = 1) ) as a order by a.inf_time desc");
+
+        $data=input('get.');
+        $keyword = $data["keyword"];
+        $pageIndex =$data['pageIndex']?$data['pageIndex']-1:0;
+        $pageSize =10;
+        $page = $pageIndex*$pageSize;
+        if($keyword) {
+            $where["inf_title"] = array("like","%".$keyword."%");
+        }
+        $list=db('system_infor')->limit($page,$pageSize)->where($where)->select();
+
+        $type = array(0=>"系统消息", 1=>"机构评论回复", 2=>"商家消息");
+        $status = array(0=>"未读取", 1=>"已读", 2=>"已删除");
+        foreach($list as $k => $v) {
+            $list[$k]["inf_type"] = $type[$v["inf_type"]];
+            $list[$k]["inf_status"] = $status[$v["inf_status"]];
+        }
+
+        $count=db('system_infor')->where($where)->count();
+        $pagecount = ceil($count/$pageSize);
+        $this->assign('keyword',$keyword);
+        $this->assign('pageIndex',$pageIndex+1);
+        $this->assign('count',$pagecount);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -1070,11 +1206,13 @@ class Organization extends Common{
     public function newsAdd(){
         if(request()->isPost()) {
             $data=input('post.');
-            $orgId = explode(':',$data['pco_orgid']);
-            $data['pco_orgid'] =$orgId[1];
-            $data['pco_type'] = 1;
-            $data['pco_time'] = date("Y-m-d H:i:s",time());
-            db('push_content')->insert($data);
+            $orgId = explode(':',$data['inf_jump_value']);
+            $data['inf_jump_value'] =$orgId[1];
+            $data['inf_type'] = 2;
+            $data['inf_status'] = 0;
+            $data['inf_is_jump'] = 1;
+            $data['inf_time'] = date("Y-m-d H:i:s",time());
+            db('system_infor')->insert($data);
             $result['msg'] = '添加成功!';
             $result['url'] = url('news');
             $result['code'] = 1;
@@ -1095,20 +1233,21 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function newsEdit(){
-        $push_content=db('push_content');
+        $push_content=db('system_infor');
         if(request()->isPost()){
             $data=input('post.');
-            $orgId = explode(':',$data['pco_orgid']);
-            $data['pco_orgid'] =$orgId[1];
-            $where['pco_id'] = input('post.pco_id');
+            $orgId = explode(':',$data['inf_jump_value']);
+            $data['inf_jump_value'] =$orgId[1];
+            $data['inf_status'] = 0;
+            $where['inf_id'] = input('post.inf_id');
             $push_content->where($where)->update($data);
             $result['code'] = 1;
             $result['msg'] = '修改成功!';
             $result['url'] = url('news');
             return $result;
         }else{
-            $pco_id = input('pco_id');
-            $newslist = $push_content->where(array("pco_id"=>$pco_id))->find();
+            $inf_id = input('inf_id');
+            $newslist = $push_content->where(array("inf_id"=>$inf_id))->find();
             $this->assign('newsinfo', json_encode($newslist,true));
             $this->orgid > 0 && $where["org_id"] = $this->orgid;
             $where["org_status"] = 1;
@@ -1126,14 +1265,14 @@ class Organization extends Common{
      * @author harry.lv
      */
     public function newsDel(){
-        $pco_id=input('pco_id');
-        if (empty($pro_id)){
+        $inf_id=input('inf_id');
+        if (empty($inf_id)){
             $result['status'] = 0;
             $result['info'] = 'ID不存在!';
             $result['url'] = url('news');
             exit;
         }
-        db('push_content')->where('pco_id='.$pco_id)->delete();
+        db('system_infor')->where('inf_id='.$inf_id)->delete();
         $this->redirect('news');
     }
 
@@ -1152,7 +1291,9 @@ class Organization extends Common{
         if($keyword) {
             $where["tol_lesson_name"] = array("like","%".$keyword."%");
         }
-        $list=db('org_lesson')->limit($page,$pageSize)->where($where)->select();
+        $list=db('org_lesson')
+            ->join("tes_org_info","org_id = tol_orgid","left")
+            ->limit($page,$pageSize)->where($where)->select();
 
         $count=db('org_lesson')->where($where)->count();
         $pagecount = ceil($count/$pageSize);
