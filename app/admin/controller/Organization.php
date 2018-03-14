@@ -154,6 +154,7 @@ class Organization extends Common{
     public function basicEdit(){
         $org_info=db('org_info');
         if(request()->isPost()){
+            print_r(input('post.'));exit;
             $data=input('post.');
             // 调用img上传接口类开始
             $img = $data['url'];
@@ -204,7 +205,6 @@ class Organization extends Common{
                 // 调用img上传接口类结束
                 $data['ode_picurl'] = implode(",",$imgurlresarrs);
             }
-
             $data['ode_tag'] = implode(",",$data['ode_tag']);
             $data['ode_selftag'] = implode(",",$data['ode_selftag']);
             $data['org_updatetime'] = date("Y-m-d H:i:s",time());
@@ -223,13 +223,15 @@ class Organization extends Common{
                 ->where(array("org_status"=>1,"org_id"=>$org_id))
                 ->find();
             $orginfo["ode_picurl"] = explode(",",$orginfo["ode_picurl"]);
-            $tagarr = array("全日托","半日托","月托","暑期托","家庭式服务","午餐","校园公开日","独立操场","儿童乐园","示范园");
-            $k = 0;
-            foreach($tagarr as $v) {
-                $k++;
-                $orginfo["ode_tag".$k] = in_array($v,explode(",",$orginfo["ode_tag"]));
-                $orginfo["ode_selftag".$k] = in_array($v,explode(",",$orginfo["ode_selftag"]));
-            }
+            $orginfo["ode_tag"] = explode(",",$orginfo["ode_tag"]);
+            $orginfo["ode_selftag"] = explode(",",$orginfo["ode_selftag"]);
+//            $tagarr = array("全日托","半日托","月托","暑期托","家庭式服务","午餐","校园公开日","独立操场","儿童乐园","示范园");
+//            $k = 0;
+//            foreach($tagarr as $v) {
+//                $k++;
+//                $orginfo["ode_tag".$k] = in_array($v,explode(",",$orginfo["ode_tag"]));
+//                $orginfo["ode_selftag".$k] = in_array($v,explode(",",$orginfo["ode_selftag"]));
+//            }
             $this->assign('orginfo', json_encode($orginfo,true));
             return $this->fetch();
         }

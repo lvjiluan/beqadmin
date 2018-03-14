@@ -104,32 +104,26 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">机构标签</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="ode_tag[1]" ng-checked="field.ode_tag1=='1'" value="全日托" title="全日托">
-                <input type="checkbox" name="ode_tag[2]" ng-checked="field.ode_tag2=='1'" value="半日托" title="半日托">
-                <input type="checkbox" name="ode_tag[3]" ng-checked="field.ode_tag3=='1'" value="月托" title="月托">
-                <input type="checkbox" name="ode_tag[4]" ng-checked="field.ode_tag4=='1'" value="暑期托" title="暑期托">
-                <input type="checkbox" name="ode_tag[5]" ng-checked="field.ode_tag5=='1'" value="家庭式服务" title="家庭式服务">
-                <input type="checkbox" name="ode_tag[6]" ng-checked="field.ode_tag6=='1'" value="午餐" title="午餐">
-                <input type="checkbox" name="ode_tag[7]" ng-checked="field.ode_tag7=='1'" value="校园公开日" title="校园公开日">
-                <input type="checkbox" name="ode_tag[8]" ng-checked="field.ode_tag8=='1'" value="独立操场" title="独立操场">
-                <input type="checkbox" name="ode_tag[9]" ng-checked="field.ode_tag9=='1'" value="儿童乐园" title="儿童乐园">
-                <input type="checkbox" name="ode_tag[10]" ng-checked="field.ode_tag10=='1'" value="示范园" title="示范园">
+            <div class="layui-input-2">
+                <input type="text" placeholder="请输入自定义标签" class="layui-input">
+            </div>
+            <input type="button" class="editode_tag1 layui-btn" value="添加" />
+            <span style="color:red">双击标签以删除它</span>
+        </div>
+        <div class="layui-form-item">
+            <div class="deltags1">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">机构特色标签</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="ode_selftag[1]" ng-checked="field.ode_selftag1=='1'" value="全日托" title="全日托">
-                <input type="checkbox" name="ode_selftag[2]" ng-checked="field.ode_selftag2=='1'" value="半日托" title="半日托">
-                <input type="checkbox" name="ode_selftag[3]" ng-checked="field.ode_selftag3=='1'" value="月托" title="月托">
-                <input type="checkbox" name="ode_selftag[4]" ng-checked="field.ode_selftag4=='1'" value="暑期托" title="暑期托">
-                <input type="checkbox" name="ode_selftag[5]" ng-checked="field.ode_selftag5=='1'" value="家庭式服务" title="家庭式服务">
-                <input type="checkbox" name="ode_selftag[6]" ng-checked="field.ode_selftag6=='1'" value="午餐" title="午餐">
-                <input type="checkbox" name="ode_selftag[7]" ng-checked="field.ode_selftag7=='1'" value="校园公开日" title="校园公开日">
-                <input type="checkbox" name="ode_selftag[8]" ng-checked="field.ode_selftag8=='1'" value="独立操场" title="独立操场">
-                <input type="checkbox" name="ode_selftag[9]" ng-checked="field.ode_selftag9=='1'" value="儿童乐园" title="儿童乐园">
-                <input type="checkbox" name="ode_selftag[10]" ng-checked="field.ode_selftag10=='1'" value="示范园" title="示范园">
+            <label class="layui-form-label">特色标签</label>
+            <div class="layui-input-2">
+                <input type="text"  placeholder="请输入自定义标签" class="layui-input">
+            </div>
+            <input type="button" class="editode_tag2 layui-btn" value="添加" />
+            <span style="color:red">双击标签以删除它</span>
+        </div>
+        <div class="layui-form-item">
+            <div class="deltags2">
             </div>
         </div>
         <div class="layui-form-item">
@@ -262,6 +256,7 @@
                 cltThumbn.attr("src",val[i]);
             }
         }
+
         layui.use(['form', 'layer'], function () {
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
@@ -277,7 +272,22 @@
                     }
                 });
             })
-        })
+
+
+        });
+        layui.use(['form', 'layer'], function () {
+            var layer = layui.layer;
+            // 添加默认标签
+            var ode_tag = $scope.field.ode_tag;
+            $.each(ode_tag, function (n, value) {
+                $(".deltags1").append("<input type=\"checkbox\" name=\"ode_tag["+n+"]\" value=\""+value+"\" title=\""+value+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+value+"</span><i class=\"layui-icon\"></i></div>");
+            });
+            var ode_selftag = $scope.field.ode_selftag;
+            $.each(ode_tag, function (n, value) {
+                $(".deltags2").append("<input type=\"checkbox\" name=\"ode_selftag["+n+"]\" value=\""+value+"\" title=\""+value+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+value+"</span><i class=\"layui-icon\"></i></div>");
+            });
+        });
+
     }]);
     function imgChangearr(e,num) {
         if(num == 0) num = "";
@@ -299,6 +309,48 @@
         if(num == 0) num = "";
         $("#thumb"+num).trigger("click");//模拟执行id=thumb的事件
     }
+</script>
+<script>
+    layui.use('layer', function(){
+        var $ = layui.jquery, layer = layui.layer;
+
+        $(document).on('dblclick','.deltags1 div',function(){
+            $(this).prev().remove();
+            $(this).remove();
+        });
+        $(document).on('dblclick','.deltags2 div',function(){
+            $(this).prev().remove();
+            $(this).remove();
+        });
+        $(document).on('click','.editode_tag1',function(){
+            var str = $(this).prev().children().val();
+            $(this).prev().children().val("");
+            var divlen = $(".deltags1 div").length+1;
+            if(str.length>0) {
+                if(str.length>99) {
+                    layer.msg("标签内容已达上限！");
+                } else {
+                    $(".deltags1").append("<input type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
+                }
+            } else {
+                layer.msg("请输入标签内容！");
+            }
+        });
+        $(document).on('click','.editode_tag2',function(){
+            var str = $(this).prev().children().val();
+            $(this).prev().children().val("");
+            var divlen = $(".deltags2 div").length+1;
+            if(str.length>0) {
+                if(str.length>99) {
+                    layer.msg("标签内容已达上限！");
+                } else {
+                    $(".deltags2").append("<input type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
+                }
+            } else {
+                layer.msg("请输入标签内容！");
+            }
+        });
+    });
 </script>
 </body>
 
