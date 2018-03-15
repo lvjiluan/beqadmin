@@ -261,6 +261,18 @@
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
+
+                var ode_tagval = $(".ode_tagval"),tagvals = [];
+                $(".ode_tagval").each(function(k,v) {
+                    tagvals.push($(this).val());
+                })
+                data.field.ode_tag =  tagvals;
+
+                var ode_selftag = $(".ode_selftag"),selftagvals = [];
+                $(".ode_selftagval").each(function(k,v) {
+                    selftagvals.push($(this).val());
+                })
+                data.field.ode_selftag =  selftagvals;
                 data.field.org_id =  $scope.field.org_id;
                 $.post("{:url('basicEdit')}",data.field,function(res){
                     if(res.code > 0){
@@ -279,13 +291,17 @@
             var layer = layui.layer;
             // 添加默认标签
             var ode_tag = $scope.field.ode_tag;
-            $.each(ode_tag, function (n, value) {
-                $(".deltags1").append("<input type=\"checkbox\" name=\"ode_tag["+n+"]\" value=\""+value+"\" title=\""+value+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+value+"</span><i class=\"layui-icon\"></i></div>");
-            });
+            if(ode_tag != "") {
+                $.each(ode_tag, function (n, value) {
+                    $(".deltags1").append("<input class='ode_tagval' type=\"checkbox\" value=\""+value+"\" title=\""+value+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+value+"</span><i class=\"layui-icon\"></i></div>");
+                });
+            }
             var ode_selftag = $scope.field.ode_selftag;
-            $.each(ode_tag, function (n, value) {
-                $(".deltags2").append("<input type=\"checkbox\" name=\"ode_selftag["+n+"]\" value=\""+value+"\" title=\""+value+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+value+"</span><i class=\"layui-icon\"></i></div>");
-            });
+            if(ode_selftag != "") {
+                $.each(ode_selftag, function (n, value) {
+                    $(".deltags2").append("<input class='ode_selftagval' type=\"checkbox\"  value=\""+value+"\" title=\""+value+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+value+"</span><i class=\"layui-icon\"></i></div>");
+                });
+            }
         });
 
     }]);
@@ -330,7 +346,7 @@
                 if(str.length>99) {
                     layer.msg("标签内容已达上限！");
                 } else {
-                    $(".deltags1").append("<input type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
+                    $(".deltags1").append("<input class='ode_tagval' type=\"checkbox\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
                 }
             } else {
                 layer.msg("请输入标签内容！");
@@ -344,7 +360,7 @@
                 if(str.length>99) {
                     layer.msg("标签内容已达上限！");
                 } else {
-                    $(".deltags2").append("<input type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
+                    $(".deltags2").append("<input class='ode_selftagval' type=\"checkbox\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
                 }
             } else {
                 layer.msg("请输入标签内容！");

@@ -59,7 +59,7 @@ class Organization extends Common{
      */
     public function basicAdd(){
         if(request()->isPost()) {
-            $data=input('post.');
+            $data=input('post.');print_r($data);
             // 调用img上传接口类开始
             $img = $data['url'];
             $imgurlmod = new UpFiles();
@@ -109,8 +109,16 @@ class Organization extends Common{
                 // 调用img上传接口类结束
                 $data['ode_picurl'] = implode(",",$imgurlresarrs);
             }
-            $data['ode_tag'] = implode(",",$data['ode_tag']);
-            $data['ode_selftag'] = implode(",",$data['ode_selftag']);
+            if(!empty($data['ode_tag'])) {
+                $data['ode_tag'] = implode(",",$data['ode_tag']);
+            } else {
+                $data['ode_tag'] = "";
+            }
+            if(!empty($data['ode_selftag'])) {
+                $data['ode_selftag'] = implode(",",$data['ode_selftag']);
+            } else {
+                $data['ode_selftag'] = "";
+            }
             $data['org_status'] = 1;
             $data['org_createtime'] = date("Y-m-d H:i:s",time());
             $m = db();
@@ -154,7 +162,6 @@ class Organization extends Common{
     public function basicEdit(){
         $org_info=db('org_info');
         if(request()->isPost()){
-            print_r(input('post.'));exit;
             $data=input('post.');
             // 调用img上传接口类开始
             $img = $data['url'];
@@ -205,8 +212,17 @@ class Organization extends Common{
                 // 调用img上传接口类结束
                 $data['ode_picurl'] = implode(",",$imgurlresarrs);
             }
-            $data['ode_tag'] = implode(",",$data['ode_tag']);
-            $data['ode_selftag'] = implode(",",$data['ode_selftag']);
+            if(!empty($data['ode_tag'])) {
+                $data['ode_tag'] = implode(",",$data['ode_tag']);
+            } else {
+                $data['ode_tag'] = "";
+            }
+            if(!empty($data['ode_selftag'])) {
+                $data['ode_selftag'] = implode(",",$data['ode_selftag']);
+            } else {
+                $data['ode_selftag'] = "";
+            }
+//            print_r($data);exit;
             $data['org_updatetime'] = date("Y-m-d H:i:s",time());
             $where['org_id'] = input('post.org_id');
             db('org_info')->where($where)->update($data);

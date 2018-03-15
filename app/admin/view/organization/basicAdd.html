@@ -106,7 +106,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">机构标签</label>
             <div class="layui-input-2">
-                <input type="text" name="org_phone"  lay-verify="required" placeholder="请输入自定义标签" class="layui-input">
+                <input type="text"  placeholder="请输入自定义标签" class="layui-input">
             </div>
             <input type="button" class="editode_tag1 layui-btn" value="添加" />
             <span style="color:red">点击标签变灰或双击标签以删除它</span>
@@ -119,7 +119,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">特色标签</label>
             <div class="layui-input-2">
-                <input type="text" name="org_phone"  lay-verify="required" placeholder="请输入自定义标签" class="layui-input">
+                <input type="text" placeholder="请输入自定义标签" class="layui-input">
             </div>
             <input type="button" class="editode_tag2 layui-btn" value="添加" />
             <span style="color:red">点击标签变灰或双击标签以删除它</span>
@@ -250,6 +250,19 @@
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
+
+                var ode_tagval = $(".ode_tagval"),tagvals = [];
+                $(".ode_tagval").each(function(k,v) {
+                    tagvals.push($(this).val());
+                })
+                data.field.ode_tag =  tagvals;
+
+                var ode_selftag = $(".ode_selftag"),selftagvals = [];
+                $(".ode_selftagval").each(function(k,v) {
+                    selftagvals.push($(this).val());
+                })
+                data.field.ode_selftag =  selftagvals;
+
                 $.post("{:url('basicAdd')}",data.field,function(res){
                     if(res.code > 0){
                         layer.msg(res.msg,{time:1800,icon:1},function(){
@@ -314,7 +327,7 @@
                 if(str.length>99) {
                     layer.msg("标签内容已达上限！");
                 } else {
-                    $(".deltags1").append("<input type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
+                    $(".deltags1").append("<input  class='ode_tagval' type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
                 }
             } else {
                 layer.msg("请输入标签内容！");
@@ -328,7 +341,7 @@
                 if(str.length>99) {
                     layer.msg("标签内容已达上限！");
                 } else {
-                    $(".deltags2").append("<input type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
+                    $(".deltags2").append("<input class='ode_selftagval' type=\"checkbox\" name=\"ode_tag["+divlen+"]\" value=\""+str+"\" title=\""+str+"\"><div class=\"layui-unselect layui-form-checkbox layui-form-checked\" lay-skin=\"\"><span>"+str+"</span><i class=\"layui-icon\"></i></div>");
                 }
             } else {
                 layer.msg("请输入标签内容！");
