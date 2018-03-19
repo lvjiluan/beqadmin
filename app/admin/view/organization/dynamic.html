@@ -38,7 +38,7 @@
                     <th>发布人</th>
                     <th>发布内容</th>
                     <th>发布时间</th>
-                    {if condition="$Think.const.ORG_ID elt 0"}<th>{:lang('action')}</th>{/if}
+                    <th>{:lang('action')}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,12 +49,10 @@
                     <td>{$v.use_nickname}</td>.
                     <td>{$v.ody_content}</td>
                     <td>{$v.ody_time}</td>
-                    {if condition="$Think.const.ORG_ID elt 0"}
                     <td>
                         <a href="{:url('dynamicEdit',['ody_id'=>$v['ody_id']])}" class="layui-btn layui-btn-mini">{:lang('edit')}</a>
                         <a href="javascript:;" onclick="return del('{$v.ody_id}')" class="layui-btn layui-btn-mini layui-btn-danger">{:lang('del')}</a>
                     </td>
-                    {/if}
                 </tr>
                 {/volist}
                 </tbody>

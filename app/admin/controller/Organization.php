@@ -59,7 +59,7 @@ class Organization extends Common{
      */
     public function basicAdd(){
         if(request()->isPost()) {
-            $data=input('post.');print_r($data);
+            $data=input('post.');
             // 调用img上传接口类开始
             $img = $data['url'];
             $imgurlmod = new UpFiles();
@@ -152,6 +152,24 @@ class Organization extends Common{
         }else{
             return $this->fetch();
         }
+    }
+
+    /**
+     * 省市区数据
+     * @date 2018-03-15
+     * @author harry.lv
+     */
+    public function pcadate(){
+        $id = input('id');
+        echo $id;exit;
+        if($id) {
+            $where["UPPER_CODE"] = $id;
+        } else {
+            $where["ADMIN_LEVEL"] = 0;
+        }
+        $m = db('area_info');
+        $res = $m->field("ADMIN_CODE as id,ADMIN_NAME as areaname,UPPER_CODE as parentid")->where($where)->select();
+        echo  json_encode($res);
     }
 
     /**
