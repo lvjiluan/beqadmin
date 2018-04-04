@@ -120,7 +120,13 @@ class Organization extends Common{
                 $data['ode_selftag'] = "";
             }
             $data['org_status'] = 1;
-            $data['org_createtime'] = date("Y-m-d H:i:s",time());
+//            $data['org_createtime'] = date("Y-m-d H:i:s",time());
+//            $org_province = explode(':',$data['org_province']);
+//            $data['org_province'] =$org_province[1];
+//            $org_city = explode(':',$data['org_city']);
+//            $data['org_city'] =$org_city[1];
+//            $org_area = explode(':',$data['org_area']);
+//            $data['org_area'] =$org_area[1];
             $m = db();
             $m->startTrans();
             $org_id = db('org_info')->insertGetId($data);
@@ -154,23 +160,6 @@ class Organization extends Common{
         }
     }
 
-    /**
-     * 省市区数据
-     * @date 2018-03-15
-     * @author harry.lv
-     */
-    public function pcadate(){
-        $id = input('id');
-        echo $id;exit;
-        if($id) {
-            $where["UPPER_CODE"] = $id;
-        } else {
-            $where["ADMIN_LEVEL"] = 0;
-        }
-        $m = db('area_info');
-        $res = $m->field("ADMIN_CODE as id,ADMIN_NAME as areaname,UPPER_CODE as parentid")->where($where)->select();
-        echo  json_encode($res);
-    }
 
     /**
      * 修改机构基本信息
@@ -240,10 +229,16 @@ class Organization extends Common{
             } else {
                 $data['ode_selftag'] = "";
             }
-//            print_r($data);exit;
+//            $org_province = explode(':',$data['org_province']);
+//            $data['org_province'] =$org_province[1];
+//            $org_city = explode(':',$data['org_city']);
+//            $data['org_city'] =$org_city[1];
+//            $org_area = explode(':',$data['org_area']);
+//            $data['org_area'] =$org_area[1];
             $data['org_updatetime'] = date("Y-m-d H:i:s",time());
             $where['org_id'] = input('post.org_id');
             db('org_info')->where($where)->update($data);
+
             $wheredetail['ode_orgid'] = input('post.org_id');
             db('org_detail')->where($wheredetail)->update($data);
             $result['msg'] = '修改成功!';
@@ -266,6 +261,9 @@ class Organization extends Common{
 //                $orginfo["ode_tag".$k] = in_array($v,explode(",",$orginfo["ode_tag"]));
 //                $orginfo["ode_selftag".$k] = in_array($v,explode(",",$orginfo["ode_selftag"]));
 //            }
+            $this->assign('province', $orginfo["org_province"]);
+            $this->assign('city', $orginfo["org_city"]);
+            $this->assign('area', $orginfo["org_area"]);
             $this->assign('orginfo', json_encode($orginfo,true));
             return $this->fetch();
         }

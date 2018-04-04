@@ -83,6 +83,24 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">机构地址</label>
+            <div class="layui-input-inline">
+                <select name="org_province"  lay-filter="org_province" class="province">
+                    <option value="">请选择省</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="org_city" lay-filter="org_city" disabled>
+                    <option value="">请选择市</option>
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <select name="org_area" lay-filter="org_area" disabled>
+                    <option value="">请选择县/区</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">机构详细地址</label>
             <div class="layui-input-6">
                 <input type="text" name="org_address"  ng-model="field.org_address"  lay-verify="required" placeholder="{:lang('pleaseEnter')}机构地址" class="layui-input">
             </div>
@@ -234,15 +252,21 @@
                 <a href="{:url('basic')}" class="layui-btn layui-btn-primary">返回</a>
             </div>
         </div>
+
     </form>
+
 </div>
+
 <script type="text/javascript" src="__ADMIN__/plugins/layui/layui.js"></script>
 <script src="__STATIC__/js/angular.min.js"></script>
 <script src="__STATIC__/js/jquery.2.1.1.min.js"></script>
+<script src="__STATIC__/js/address.js"></script>
 <script>
     var m = angular.module('hd',[]);
+
     m.controller('ctrl',['$scope',function($scope){
         $scope.field = {$orginfo};
+
         if($scope.field.org_chargepicurl){
             cltThumb.src = $scope.field.org_chargepicurl;
         }
@@ -304,6 +328,7 @@
             }
         });
 
+
     }]);
     function imgChangearr(e,num) {
         if(num == 0) num = "";
@@ -326,6 +351,7 @@
         $("#thumb"+num).trigger("click");//模拟执行id=thumb的事件
     }
 </script>
+
 <script>
     layui.use('layer', function(){
         var $ = layui.jquery, layer = layui.layer;
@@ -366,6 +392,12 @@
                 layer.msg("请输入标签内容！");
             }
         });
+    });
+
+    layui.config({
+        base : "__STATIC__/js/" //address.js的路径
+    }).use([ 'layer', 'jquery', "address" ], function() {
+        var layer = layui.layer, $ = layui.jquery, address = layui.address();
     });
 </script>
 </body>

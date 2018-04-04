@@ -83,21 +83,21 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
+        <div class="layui-form-item layui-form">
             <label class="layui-form-label">机构地址</label>
             <div class="layui-input-inline">
-                <select name="province" class="state" lay-filter="state">
-                    <option value="0">请选择</option>
+                <select name="org_province" lay-filter="org_province" class="province">
+                    <option value="">请选择省</option>
                 </select>
             </div>
             <div class="layui-input-inline">
-                <select name="city" class="state" lay-filter="state">
-                    <option value="0">请选择</option>
+                <select name="org_city" lay-filter="org_city" disabled>
+                    <option value="">请选择市</option>
                 </select>
             </div>
             <div class="layui-input-inline">
-                <select name="district" class="state" lay-filter="state">
-                    <option value="0">请选择</option>
+                <select name="org_area" lay-filter="org_area" disabled>
+                    <option value="">请选择县/区</option>
                 </select>
             </div>
         </div>
@@ -259,9 +259,11 @@
         </div>
     </form>
 </div>
+<script src="__STATIC__/js/jquery.2.1.1.min.js"></script>
 <script type="text/javascript" src="__ADMIN__/plugins/layui/layui.js"></script>
 <script src="__STATIC__/js/angular.min.js"></script>
-<script src="__STATIC__/js/jquery.2.1.1.min.js"></script>
+<script src="__STATIC__/js/address.js"></script>
+
 
 <script>
     var m = angular.module('hd',[]);
@@ -270,7 +272,6 @@
             var form = layui.form(),layer = layui.layer;
             form.on('submit(auth)', function (data) {
                 // 提交到方法 默认为本身
-
                 var ode_tagval = $(".ode_tagval"),tagvals = [];
                 $(".ode_tagval").each(function(k,v) {
                     tagvals.push($(this).val());
@@ -293,7 +294,32 @@
                     }
                 });
             })
+
+            $(document).on('click','.province',function(){
+                layer.msg('hello');
+            });
+            // var province = "";
+            // var categoryName = "";
+            // form.on('select(org_province)', function (data) {
+            //     province = data.value;
+            //
+            //     categoryName = data.elem[data.elem.selectedIndex].text;
+            //     form.render('select');
+            //     alert(categoryName);
+            // });
         });
+
+
+        // form.on('select(category)', function (data) {
+        //     category = data.value;
+        //     categoryName = data.elem[data.elem.selectedIndex].text;
+        //     form.render('select');
+        // });
+        // form.on('select(category)', function (data) {
+        //     category = data.value;
+        //     categoryName = data.elem[data.elem.selectedIndex].text;
+        //     form.render('select');
+        // });
     }]);
     function imgChangearr(e,num) {
         if(num == 0) num = "";
@@ -369,46 +395,11 @@
         });
     });
 
-    //省市区联动
-    layui.use('form', function(){
-        //如果有需要到镇的改改就可以实现
-        var form = layui.form(),
-            layer = layui.layer,
-            $ = layui.jquery;
-        var url =  '{:url(\'pcadate\')}'; //数据请求地址
-        var province = "广东省"; //编辑需要的省
-        var city = "广州市"; //编辑需要的市
-        var district = "天河区"; //编辑需要的县/区
-        getJSON(url,$("select[name='province']").closest("div"));
-        form.on('select(state)', function(data){
-            $that = $(data.elem);
-            urls = url+"?id="+data.value    ;
-            getJSON(urls,$that.closest("div").next());
-        });
-        function getJSON(urls,even){
-            $.getJSON(urls, function(json){
-                var pid = 0;
-                var name = even.find("select").attr("name");
-                var select = "<select name=\"" + name + "\" lay-filter=\"state\">";
-                select += "<option value=\"0\">请选择 </option>";
-                $(json).each(function(){
-                    select += "<option value=\"" + this.id + "\"";
-                    if(province == this.value || city == this.value || district == this.value){
-                        select += " selected=\"selected\" ";
-                        pid = this.id;
-                    }
-                    select += ">" + this.areaname + "</option>";
-                });
-                select += "</select>";
-                even.html(select);
-                var nextName = even.next().find("select").attr("name");
-                even.next().html("<select name=\"" + nextName + "\" lay-filter=\"state\"><option value=\"0\">请选择 </option></select>");
-                form.render('select');
-                if(pid != 0){
-                    getJSON(url+"?id="+pid,even.next());
-                }
-            });
-        }
+    layui.config({
+        base : "__STATIC__/js/" //address.js的路径
+    }).use([ 'layer', 'jquery', "address" ], function() {
+        var layer = layui.layer, $ = layui.jquery, address = layui.address();
+
     });
 </script>
 </body>
