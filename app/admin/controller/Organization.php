@@ -120,13 +120,6 @@ class Organization extends Common{
                 $data['ode_selftag'] = "";
             }
             $data['org_status'] = 1;
-//            $data['org_createtime'] = date("Y-m-d H:i:s",time());
-//            $org_province = explode(':',$data['org_province']);
-//            $data['org_province'] =$org_province[1];
-//            $org_city = explode(':',$data['org_city']);
-//            $data['org_city'] =$org_city[1];
-//            $org_area = explode(':',$data['org_area']);
-//            $data['org_area'] =$org_area[1];
             $m = db();
             $m->startTrans();
             $org_id = db('org_info')->insertGetId($data);
@@ -229,12 +222,6 @@ class Organization extends Common{
             } else {
                 $data['ode_selftag'] = "";
             }
-//            $org_province = explode(':',$data['org_province']);
-//            $data['org_province'] =$org_province[1];
-//            $org_city = explode(':',$data['org_city']);
-//            $data['org_city'] =$org_city[1];
-//            $org_area = explode(':',$data['org_area']);
-//            $data['org_area'] =$org_area[1];
             $data['org_updatetime'] = date("Y-m-d H:i:s",time());
             $where['org_id'] = input('post.org_id');
             db('org_info')->where($where)->update($data);
@@ -254,13 +241,7 @@ class Organization extends Common{
             $orginfo["ode_picurl"] = explode(",",$orginfo["ode_picurl"]);
             $orginfo["ode_tag"] = explode(",",$orginfo["ode_tag"]);
             $orginfo["ode_selftag"] = explode(",",$orginfo["ode_selftag"]);
-//            $tagarr = array("全日托","半日托","月托","暑期托","家庭式服务","午餐","校园公开日","独立操场","儿童乐园","示范园");
-//            $k = 0;
-//            foreach($tagarr as $v) {
-//                $k++;
-//                $orginfo["ode_tag".$k] = in_array($v,explode(",",$orginfo["ode_tag"]));
-//                $orginfo["ode_selftag".$k] = in_array($v,explode(",",$orginfo["ode_selftag"]));
-//            }
+
             $this->assign('province', $orginfo["org_province"]);
             $this->assign('city', $orginfo["org_city"]);
             $this->assign('area', $orginfo["org_area"]);
